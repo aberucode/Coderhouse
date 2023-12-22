@@ -1,22 +1,81 @@
 const prompt = require("prompt-sync")();
+const pause = () => prompt("(press ENTER to contine...)");
 console.clear();
+
+class user {
+  #name;
+  #lastname;
+  #username;
+  #email;
+  #password;
+  constructor(_name, _lastname, _username, _email, _password) {
+    this.#name = _name;
+    this.#lastname = _lastname;
+    this.#username = _username;
+    this.#email = _email;
+    this.#password = _password;
+  }
+  setName(_name) {
+    this.#name = _name;
+  }
+  setLastname(_lastname) {
+    this.#lastname = _lastname;
+  }
+  setUsername(_username) {
+    this.#username = _username;
+  }
+  setEmail(_email) {
+    this.#email = _email;
+  }
+  setPassword(_password) {
+    this.#password = _password;
+  }
+  getUser() {
+    return {
+      name: this.#name,
+      lastname: this.#lastname,
+      username: this.#username,
+      email: this.#email,
+      password: this.#password,
+    };
+  }
+}
 
 class product {
   #id;
-  #nombre;
-  #precio;
-  #cantidad;
-  constructor(_id, _nombre, _precio, _cantidad) {
+  #name;
+  #price;
+  #cant;
+  constructor(_id, _name, _price, _cant) {
     this.#id = _id;
-    this.#nombre = _nombre;
-    this.#precio = _precio;
-    this.#cantidad = _cantidad;
+    this.#name = _name;
+    this.#price = _price;
+    this.#cant = _cant;
+  }
+  setId(_id) {
+    this.#id = _id;
+  }
+  setNombre(_id) {
+    this.#id = _id;
+  }
+  setId(_id) {
+    this.#id = _id;
+  }
+  setId(_id) {
+    this.#id = _id;
+  }
+  getProduct() {
+    return {
+      id: this.#id,
+      name: this.#name,
+      price: this.#price,
+      cant: this.#cant,
+    };
   }
 }
 
 function menu_acceso() {
   let bucle = false;
-  const pause = () => prompt("(press ENTER to contine...)");
   let opcion;
   while (!bucle) {
     console.log(
