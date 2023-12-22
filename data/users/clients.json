@@ -1,0 +1,82 @@
+[
+  {
+    "name": "John",
+    "lastname": "Doe",
+    "username": "johndoe",
+    "email": "johndoe@gmail.com",
+    "password": "password123",
+    "rol": "0"
+  },
+  {
+    "name": "Jane",
+    "lastname": "Smith",
+    "username": "janesmith",
+    "email": "janesmith@gmail.com",
+    "password": "password456",
+    "rol": "0"
+  },
+  {
+    "name": "Michael",
+    "lastname": "Johnson",
+    "username": "michaelj",
+    "email": "michaelj@gmail.com",
+    "password": "password789",
+    "rol": "0"
+  },
+  {
+    "name": "Emily",
+    "lastname": "Davis",
+    "username": "emilyd",
+    "email": "emilyd@gmail.com",
+    "password": "password321",
+    "rol": "0"
+  },
+  {
+    "name": "Daniel",
+    "lastname": "Wilson",
+    "username": "danielw",
+    "email": "danielw@gmail.com",
+    "password": "password654",
+    "rol": "0"
+  },
+  {
+    "name": "Olivia",
+    "lastname": "Taylor",
+    "username": "oliviat",
+    "email": "oliviat@gmail.com",
+    "password": "password987",
+    "rol": "0"
+  },
+  {
+    "name": "David",
+    "lastname": "Anderson",
+    "username": "davida",
+    "email": "davida@gmail.com",
+    "password": "password123",
+    "rol": "0"
+  },
+  {
+    "name": "Sophia",
+    "lastname": "Thomas",
+    "username": "sophiat",
+    "email": "sophiat@gmail.com",
+    "password": "password456",
+    "rol": "0"
+  },
+  {
+    "name": "James",
+    "lastname": "Brown",
+    "username": "jamesb",
+    "email": "jamesb@gmail.com",
+    "password": "password789",
+    "rol": "0"
+  },
+  {
+    "name": "Ava",
+    "lastname": "Lee",
+    "username": "avalee",
+    "email": "avalee@gmail.com",
+    "password": "password321",
+    "rol": "0"
+  }
+]

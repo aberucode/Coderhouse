@@ -1,0 +1,122 @@
+[
+  {
+    "id": "1",
+    "name": "Laptop",
+    "price": "800",
+    "cant": "100"
+  },
+  {
+    "id": "2",
+    "name": "Smartphone",
+    "price": "500",
+    "cant": "75"
+  },
+  {
+    "id": "3",
+    "name": "Headphones",
+    "price": "100",
+    "cant": "120"
+  },
+  {
+    "id": "4",
+    "name": "Tablet",
+    "price": "300",
+    "cant": "90"
+  },
+  {
+    "id": "5",
+    "name": "Speakers",
+    "price": "200",
+    "cant": "80"
+  },
+  {
+    "id": "6",
+    "name": "Camera",
+    "price": "600",
+    "cant": "110"
+  },
+  {
+    "id": "7",
+    "name": "Gaming Console",
+    "price": "400",
+    "cant": "95"
+  },
+  {
+    "id": "8",
+    "name": "Smartwatch",
+    "price": "250",
+    "cant": "70"
+  },
+  {
+    "id": "9",
+    "name": "Printer",
+    "price": "150",
+    "cant": "130"
+  },
+  {
+    "id": "10",
+    "name": "Monitor",
+    "price": "300",
+    "cant": "85"
+  },
+  {
+    "id": "11",
+    "name": "Keyboard",
+    "price": "50",
+    "cant": "100"
+  },
+  {
+    "id": "12",
+    "name": "Mouse",
+    "price": "30",
+    "cant": "120"
+  },
+  {
+    "id": "13",
+    "name": "External Hard Drive",
+    "price": "100",
+    "cant": "110"
+  },
+  {
+    "id": "14",
+    "name": "Virtual Reality Headset",
+    "price": "400",
+    "cant": "90"
+  },
+  {
+    "id": "15",
+    "name": "Microphone",
+    "price": "150",
+    "cant": "80"
+  },
+  {
+    "id": "16",
+    "name": "Wireless Earphones",
+    "price": "80",
+    "cant": "120"
+  },
+  {
+    "id": "17",
+    "name": "Router",
+    "price": "70",
+    "cant": "100"
+  },
+  {
+    "id": "18",
+    "name": "Smart Speaker",
+    "price": "120",
+    "cant": "90"
+  },
+  {
+    "id": "19",
+    "name": "Graphic Tablet",
+    "price": "200",
+    "cant": "85"
+  },
+  {
+    "id": "20",
+    "name": "Fitness Tracker",
+    "price": "100",
+    "cant": "75"
+  }
+]
