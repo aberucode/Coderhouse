@@ -1,7 +1,6 @@
 {
   "name": "primer_desafio",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "node index.js"
@@ -10,5 +9,7 @@
   "license": "ISC MIT",
   "dependencies": {
     "prompt-sync": "^4.2.0"
-  }
+  },
+  "keywords": [],
+  "description": ""
 }
