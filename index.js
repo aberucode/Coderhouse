@@ -1,18 +1,6 @@
 const prompt = require("prompt-sync")();
 const fs = require("fs");
 const pause = () => prompt("(press ENTER to contine...)");
-
-// recover data - users
-//const clients = JSON.parse(
-//  fs.readFileSync("./data/users/clients.json", "utf-8"),
-//);
-//const managers = JSON.parse(
-//  fs.readFileSync("./data/users/managers.json", "utf-8"),
-//);
-//
-//// recover data - products
-//const products = JSON.parse(fs.readFileSync("./data/products.json", "utf-8"));
-
 console.clear();
 
 class user {
@@ -74,6 +62,17 @@ class user {
       rol: this.#rol,
     };
   }
+
+  static getInstance(_data) {
+    return new user(
+      _data.name,
+      _data.lastname,
+      _data.username,
+      _data.email,
+      _data.password,
+      _data.rol,
+    );
+  }
 }
 
 class product {
@@ -123,44 +122,79 @@ class product {
       cant: this.#cant,
     };
   }
+
+  static getInstance(_data) {
+    return new product(_data.id, _data.name, _data.price, _data.cant);
+  }
 }
 
-//----->const arreglo = [
-//----->  new user("Abel", "Ortega", "aberu029", "abelangel2001@outlook.com", "123", 0),
-//----->  new user(
-//----->    "Angel",
-//----->    "Fuentes",
-//----->    "angel029",
-//----->    "angelfuentes@outlook.com",
-//----->    "123",
-//----->    0,
-//----->  ),
-//----->  new user(
-//----->    "Eduardo",
-//----->    "Holgado",
-//----->    "eduardo029",
-//----->    "eduardoholgado2001@outlook.com",
-//----->    "123",
-//----->    0,
-//----->  ),
-//----->  new user(
-//----->    "Mario",
-//----->    "Escudero",
-//----->    "mario029",
-//----->    "marioescudero2001@outlook.com",
-//----->    "123",
-//----->    0,
-//----->  ),
-//----->];
-//----->
-//----->arreglo.forEach((e) => console.log(e.getName()));
+// Recover data - users
+const pClients = [];
+const pManagers = [];
+JSON.parse(fs.readFileSync("./data/users/clients.json", "utf-8")).forEach((e) =>
+  pClients.push(user.getInstance(e)),
+);
+JSON.parse(fs.readFileSync("./data/users/managers.json", "utf-8")).forEach(
+  (e) => pManagers.push(user.getInstance(e)),
+);
+
+// Recover data - products
+const pProducts = [];
+JSON.parse(fs.readFileSync("./data/products.json", "utf-8")).forEach((e) =>
+  pProducts.push(product.getInstance(e)),
+);
 
 // MENUS
+signup = () => {
+  let bucle = false;
+  let name;
+  let lastname;
+  let username;
+  let password;
+  let email;
+  let confirm;
+  while (!bucle) {
+    console.log(
+      `
+       *-------------------------------*
+       |---ONLINE MARKETS -  SIGN UP---|
+       *-------------------------------*
+      `,
+    );
+    name = prompt(` --> Name: `);
+    lastname = prompt(` --> Lastname: `);
+    username = prompt(` --> Username: `);
+    email = prompt(` --> Email: `);
+    password = prompt(` --> Password: `);
+    console.log("\n (Elementos guardados) ");
+    confirm = prompt(` Confirmar nuevo usuario? 1(yes)/0(not) --> `);
+    if (confirm == 1) {
+      pClients.push(new user(name, lastname, username, email, password, 0));
+      const jsonData = JSON.stringify(
+        pClients.map((e) => e.getUser()),
+        null,
+        2,
+      );
+      fs.writeFileSync("./data/users/clients.json", jsonData, (error) => {
+        if (error) {
+          console.log(`error: ${error}`);
+        } else {
+          console.log("Sin errores");
+        }
+      });
+      bucle = true;
+      return true;
+    } else {
+      console.clear();
+    }
+  }
+};
 
-function login_menu() {
+login = (tUser) => {
   let bucle = false;
   let username;
   let password;
+  let opcion;
   while (!bucle) {
     console.log(
       `
@@ -171,8 +205,39 @@ function login_menu() {
     );
     username = prompt(` --> Username: `);
     password = prompt(` --> Password: `);
+    if (tUser) {
+      if (
+        pManagers.some(
+          (e) => e.getUsername() === username && e.getPassword() === password,
+        )
+      ) {
+        bucle = true;
+        return true;
+      } else {
+        console.log("\n (Error al digitar el usuario o la contrasena)");
+        opcion = prompt(` Desea continuar? 1(yes)/0(not) --> `);
+        if (opcion == 1) console.clear();
+        else if (opcion == 0) return false;
+        else return false;
+      }
+    } else {
+      if (
+        pClients.some(
+          (e) => e.getUsername() === username && e.getPassword() === password,
+        )
+      ) {
+        bucle = true;
+        return true;
+      } else {
+        console.log("\n (Error al digitar el usuario o la contrasena)");
+        opcion = prompt(` Desea continuar? 1(yes)/0(not) --> `);
+        if (opcion == 1) console.clear();
+        else if (opcion == 0) return false;
+        else return false;
+      }
+    }
   }
-}
+};
 
 function client_menu() {
   let bucle = false;
@@ -186,7 +251,7 @@ function client_menu() {
        |     1. Log In                 |
        |     2. Sign Up                |
        |     3. Credits                |
-       |     4. Exit                   |                    
+       |     4. Return                 |                    
        *-------------------------------*
       `,
     );
@@ -194,20 +259,28 @@ function client_menu() {
     console.clear();
     switch (opcion) {
       case 1:
-        console.log("hola");
-        pause();
+        if (login(0)) {
+          console.log("Inicio de sesion exitoso");
+          pause();
+        } else {
+          console.log("No se pudo iniciar sesion");
+          pause();
+        }
         break;
       case 2:
-        console.log("hola 2");
-        pause();
+        if (signup()) {
+          console.log("Bienvendio :)");
+          pause();
+        } else {
+          console.log("Raios :(");
+          pause();
+        }
         break;
       case 3:
         console.log("hola 3");
         pause();
         break;
       case 4:
-        console.log("salir");
-        pause();
         bucle = true;
         break;
       default:
@@ -228,7 +301,7 @@ function manager_menu() {
        *-------------------------------*
        |     1. Log In                 |
        |     2. Recover Account        |
-       |     3. Exit                   |                    
+       |     3. Return                 |                    
        *-------------------------------*
       `,
     );
@@ -236,16 +309,13 @@ function manager_menu() {
     console.clear();
     switch (opcion) {
       case 1:
-        console.log("hola");
-        pause();
+        login(1);
         break;
       case 2:
         console.log("hola 2");
         pause();
         break;
       case 3:
-        console.log("salir");
-        pause();
         bucle = true;
         break;
       default:
@@ -274,47 +344,22 @@ function access_menu() {
     console.clear();
     switch (opcion) {
       case 1:
-        console.log("hola");
-        pause();
+        manager_menu();
         break;
       case 2:
-        console.log("hola 2");
-        pause();
+        client_menu();
         break;
       case 3:
-        console.log("salir");
+        console.log("Usted a salido del programa\n");
         pause();
         bucle = true;
         break;
       default:
+        console.log("Opcion incorrecta\n");
         break;
     }
     console.clear();
   }
 }
 
-// test
-// leer archivos
-//const fs = require("fs");
-//const datos = fs.readFileSync("./data/users/clients.json", "utf-8");
-//const personas = JSON.parse(datos);
-////console.log(personas);
-//
-//// escritura
-//const persona = {
-//  name: "Leonardo",
-//  lastname: "Gabriel",
-//  username: "Leo",
-//  email: "leonardo29@outlook.com",
-//  password: "clavekdkd3",
-//  rol: 0,
-//};
-//personas.push(persona);
-//const jsonData = JSON.stringify(personas, null, 2);
-//fs.writeFileSync("./data/users/clients.json", jsonData, (error) => {
-//  if (error) {
-//    console.log(`error: ${error}`);
-//  } else {
-//    console.log("Archivo json generado correctamente");
-//  }
-//});
+access_menu();

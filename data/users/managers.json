@@ -6,5 +6,37 @@
     "email": "abelortega029@outlook.com",
     "password": "mechanicalkeyboard11",
     "rol": 1
+  },
+  {
+    "name": "Angel",
+    "lastname": "Cuevas",
+    "username": "angcuevas",
+    "email": "angelcuevas@outlook.com",
+    "password": "password123",
+    "rol": 1
+  },
+  {
+    "name": "Cristian",
+    "lastname": "Jovanovich",
+    "username": "crisjovanovich",
+    "email": "cristianjovanovich@outlook.com",
+    "password": "password342",
+    "rol": 1
+  },
+  {
+    "name": "Angelismar",
+    "lastname": "Magallanes",
+    "username": "marmagallanes",
+    "email": "angelismarmagallanes@outlook.com",
+    "password": "password231",
+    "rol": 1
+  },
+  {
+    "name": "Alexis",
+    "lastname": "Coronel",
+    "username": "alexcoronel",
+    "email": "alexiscoronel@outlook.com",
+    "password": "password312",
+    "rol": 1
   }
 ]
