@@ -1,6 +1,7 @@
 const prompt = require("prompt-sync")();
 const fs = require("fs");
 const pause = () => prompt("(press ENTER to contine...)");
+let user_idx = 0;
 console.clear();
 
 class user {
@@ -88,23 +89,23 @@ class product {
   }
   // Getters
   getId() {
-    this.#id;
+    return this.#id;
   }
   getName() {
-    this.#name;
+    return this.#name;
   }
   getPrice() {
-    this.#price;
+    return this.#price;
   }
   getCant() {
-    this.#cant;
+    return this.#cant;
   }
 
   // Setters
   setId(_id) {
     this.#id = _id;
   }
-  setNombre(_name) {
+  setName(_name) {
     this.#name = _name;
   }
   setPrice(_price) {
@@ -134,8 +135,9 @@ const pManagers = [];
 JSON.parse(fs.readFileSync("./data/users/clients.json", "utf-8")).forEach((e) =>
   pClients.push(user.getInstance(e)),
 );
-JSON.parse(fs.readFileSync("./data/users/managers.json", "utf-8")).forEach(
-  (e) => pManagers.push(user.getInstance(e)),
+// prettier-ignore
+JSON.parse(fs.readFileSync("./data/users/managers.json", "utf-8")).forEach((e) => 
+  pManagers.push(user.getInstance(e)),
 );
 
 // Recover data - products
@@ -145,6 +147,141 @@ JSON.parse(fs.readFileSync("./data/products.json", "utf-8")).forEach((e) =>
 );
 
 // MENUS
+
+// prettier-ignore
+deleteproduct = (id) => {
+  let bucle = false;
+  let confirm;
+  while (!bucle) {
+    console.log(
+      `
+       *------------------------------------*
+       |--ONLINE MARKETS -  DELETE PRODUCT--|
+       *------------------------------------*
+        - Product id: ${pProducts[id-1].getId()}
+        - Product name: ${pProducts[id-1].getName()}
+        - Product price: $/ ${pProducts[id-1].getPrice()}
+        - Product cant: ${pProducts[id-1].getCant()} units
+      `,
+    );
+    console.log("\n (Elemento identificado) ");
+    confirm = prompt(` Confirmar eliminacion? 1(yes)/0(not) --> `);
+    if (confirm == 1) {
+      pProducts.splice(id-1, 1);
+      pProducts.forEach((e,i) => {
+        if(e.getId() - i > 1){
+          e.setId(i + 1);
+        }
+      })
+      const jsonData = JSON.stringify(pProducts.map((e) => e.getProduct()), null,2);
+      fs.writeFileSync("./data/products.json", jsonData, (error) => {
+        if (error) {
+          console.log(`error: ${error}`);
+        } else {
+          console.log("Sin errores");
+        }
+      });
+      bucle = true;
+      return true;
+    } else {
+        bucle = true;
+        return false;
+    }
+  }
+}
+// prettier-ignore
+modifyproduct = (id) => {
+  let bucle = false;
+  let name;
+  let price;
+  let cant;
+  let confirm;
+  while (!bucle) {
+    console.log(
+      `
+       *------------------------------------*
+       |--ONLINE MARKETS -  MODIFY PRODUCT--|
+       *------------------------------------*
+        Preserve data? Enter -1
+
+      `,
+    );
+    name = prompt(` --> New product name: `);
+    price = prompt(` --> New product price: `);
+    cant = prompt(` --> New product cant: `);
+    console.log("\n (Elementos guardados) ");
+    confirm = prompt(` Confirmar cambios? 1(yes)/0(not) --> `);
+    if (confirm == 1) {
+      name === "-1"?0:pProducts[id-1].setName(name);
+      price === "-1"?0:pProducts[id-1].setPrice(parseFloat(price));
+      cant === "-1"?0:pProducts[id-1].setCant(parseInt(cant));
+      const jsonData = JSON.stringify(pProducts.map((e) => e.getProduct()), null,2);
+      fs.writeFileSync("./data/products.json", jsonData, (error) => {
+        if (error) {
+          console.log(`error: ${error}`);
+        } else {
+          console.log("Sin errores");
+        }
+      });
+      bucle = true;
+      return true;
+    } else {
+      confirm = prompt( ` Reiniciar? 1(yes)/0(not) --> `);
+      if(confirm == 1) {
+        console.clear();
+      }else{
+        bucle = true;
+        return false;
+      }
+    }
+  }
+}
+
+// prettier-ignore
+addproduct = () => {
+  let bucle = false;
+  let name;
+  let price;
+  let cant;
+  let confirm;
+  while (!bucle) {
+    console.log(
+      `
+       *---------------------------------*
+       |--ONLINE MARKETS -  ADD PRODUCT--|
+       *---------------------------------*
+      `,
+    );
+    name = prompt(` --> Product name: `);
+    price = parseFloat(prompt(` --> Product price: `));
+    cant = parseInt(prompt(` --> Product cant: `));
+    console.log("\n (Elementos guardados) ");
+    confirm = prompt(` Confirmar nuevo producto? 1(yes)/0(not) --> `);
+    if (confirm == 1) {
+      pProducts.push(new product(pProducts.length, name, price, cant));
+      const jsonData = JSON.stringify(pProducts.map((e) => e.getProduct()), null,2);
+      fs.writeFileSync("./data/products.json", jsonData, (error) => {
+        if (error) {
+          console.log(`error: ${error}`);
+        } else {
+          console.log("Sin errores");
+        }
+      });
+      bucle = true;
+      return true;
+    } else {
+      confirm = prompt( ` Reiniciar? 1(yes)/0(not) --> `);
+      if(confirm == 1) {
+        console.clear();
+      }else{
+        bucle = true;
+        return false;
+      }
+    }
+  }
+};
+
+// prettier-ignore
 signup = () => {
   let bucle = false;
   let name;
@@ -170,11 +307,7 @@ signup = () => {
     confirm = prompt(` Confirmar nuevo usuario? 1(yes)/0(not) --> `);
     if (confirm == 1) {
       pClients.push(new user(name, lastname, username, email, password, 0));
-      const jsonData = JSON.stringify(
-        pClients.map((e) => e.getUser()),
-        null,
-        2,
-      );
+      const jsonData = JSON.stringify(pClients.map((e) => e.getUser()), null,2);
       fs.writeFileSync("./data/users/clients.json", jsonData, (error) => {
         if (error) {
           console.log(`error: ${error}`);
@@ -185,11 +318,57 @@ signup = () => {
       bucle = true;
       return true;
     } else {
-      console.clear();
+      confirm = prompt( ` Reiniciar? 1(yes)/0(not) --> `);
+      if(confirm == 1) {
+        console.clear();
+      }else{
+        bucle = true;
+        return false;
+      }
     }
   }
 };
 
+// prettier-ignore
+recoveraccunt = () => {
+  let auxUser;
+  let bucle = false;
+  let email;
+  let name;
+  let username;
+  let opcion;
+  while (!bucle) {
+    console.log(
+      `
+       *----------------------------------------*
+       |----ONLINE MARKETS - RECOVER ACCOUNT----|
+       *----------------------------------------*
+      `,
+    );
+    email = prompt(` --> Email: `);
+    console.log("\n Preguntas de seguridad")
+    name = prompt(` Cual es su nombre? `);
+    username = prompt(` Cual es su nombre de usuario? `);
+    if (pManagers.some((e) => {
+      if(e.getEmail() === email && e.getName() === name && e.getUsername() === username){
+        auxUser = e.getUser(); 
+        return true;
+      }
+      return false;
+    })) {
+      bucle = true;
+      return auxUser;
+    } else {
+       console.log("\n (Error al digitar o cuenta no encontrada)");
+       opcion = prompt(` Desea continuar? 1(yes)/0(not) --> `);
+       if (opcion == 1) console.clear();
+       else if (opcion == 0) return false;
+       else return false;
+    }
+  }
+}
+
+// prettier-ignore
 login = (tUser) => {
   let bucle = false;
   let username;
@@ -206,10 +385,13 @@ login = (tUser) => {
     username = prompt(` --> Username: `);
     password = prompt(` --> Password: `);
     if (tUser) {
-      if (
-        pManagers.some(
-          (e) => e.getUsername() === username && e.getPassword() === password,
-        )
+      if (pManagers.some((e, i) => {
+          if (e.getUsername() === username && e.getPassword() === password) {
+            user_idx = i;
+            return true;
+          }
+          return false;
+        })
       ) {
         bucle = true;
         return true;
@@ -221,10 +403,13 @@ login = (tUser) => {
         else return false;
       }
     } else {
-      if (
-        pClients.some(
-          (e) => e.getUsername() === username && e.getPassword() === password,
-        )
+      if (pClients.some((e, i) => {
+          if (e.getUsername() === username && e.getPassword() === password) {
+            user_idx = i;
+            return true;
+          }
+          return false;
+        })
       ) {
         bucle = true;
         return true;
@@ -239,6 +424,78 @@ login = (tUser) => {
   }
 };
 
+// prettier-ignore
+function client_dashboard() {
+  console.clear();
+  let bucle = false;
+  let opcion;
+  while (!bucle) {
+    console.log(
+      `
+       Client: ${pClients[user_idx].getName()} ${pClients[user_idx].getLastname()} 
+
+       *-----------------------------------*
+       |------ONLINE MARKETS - CLIENTS-----|
+       *-----------------------------------*
+       |   1. Empezar a comprar            |
+       |                                   |
+       |   Compras                         |
+       |    2. Visualizar historial        |
+       |    3. Carrito de compras          |
+       |    4. Productos favoritos         |
+       |                                   |
+       |   Cuenta                          |
+       |    5. Visualizar datos            |
+       |    6. Modificar datos             |
+       |    7. Eliminar cuenta             |
+       |                                   |
+       |   8. Return                       |                    
+       *-----------------------------------*
+      `,
+    );
+    opcion = parseInt(prompt(` --> `));
+    console.clear();
+    switch (opcion) {
+      case 1:
+        console.log("hola 1");
+        pause();
+        break;
+      case 2:
+        console.log("hola 2");
+        pause();
+        break;
+      case 3:
+        console.log("hola 3");
+        pause();
+        break;
+      case 4:
+        console.log("hola 4");
+        pause();
+        break;
+      case 5:
+        console.log("hola 5");
+        pause();
+        break;
+      case 6:
+        console.log("hola 6");
+        pause();
+        break;
+      case 7:
+        console.log("hola 7");
+        pause();
+        break;
+      case 8:
+        bucle = true;
+        break;
+      default:
+        break;
+    }
+    console.clear();
+  }
+  
+}
+
+// prettier-ignore
 function client_menu() {
   let bucle = false;
   let opcion;
@@ -260,24 +517,45 @@ function client_menu() {
     switch (opcion) {
       case 1:
         if (login(0)) {
-          console.log("Inicio de sesion exitoso");
+          console.log("\nInicio de sesion exitoso");
           pause();
+          client_dashboard();
         } else {
-          console.log("No se pudo iniciar sesion");
+          console.log("\nNo se pudo iniciar sesion");
           pause();
         }
         break;
       case 2:
         if (signup()) {
-          console.log("Bienvendio :)");
-          pause();
-        } else {
-          console.log("Raios :(");
+          console.log("\nRegistro de cuenta exitoso");
           pause();
         }
         break;
       case 3:
-        console.log("hola 3");
+        console.log(
+          `
+            Copyright (c) 2023 Abel Ortega 
+            
+            Permission is hereby granted, free of chaneg, to any person obtaining
+            a copy of this software and associated documentation files (the 
+            "Software"), to deal in the Software without restriction, including
+            without limitation the rights to use, copy, modify, merge, publish,
+            distribute, sublicense, and/or sell copies of the Software, and to
+            permit persons to whom the Software is furnished to do so, subject to
+            the following conditions:
+
+            The above copyright notice and this permission notice shall be
+            included in all copies or substantial portions of the Software.
+
+            THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+            EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+            MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
+            MONINFRINGEMENT, IN NO EVENT SHALL THE AUTHOR OR COPYRIGHT HOLDERS BE 
+            LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+            OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+            WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+            
+          `);
         pause();
         break;
       case 4:
@@ -290,14 +568,127 @@ function client_menu() {
   }
 }
 
+// prettier-ignore
+function manager_dashboard() {
+  console.clear();
+  let bucle = false;
+  let auxid = 0;
+  let opcion;
+  while (!bucle) {
+    console.log(
+      `
+       Manager: ${pManagers[user_idx].getName()} ${pManagers[user_idx].getLastname()} 
+
+       *-----------------------------------*
+       |-----ONLINE MARKETS - MANAGERS ----|
+       *-----------------------------------*
+       |   Ventas                          |
+       |    1. Historial de ventas         |
+       |    2. Productos mas vendidos      |
+       |    3. Productos menos vendidos    |
+       |    4. Clientes destacados         |
+       |                                   |
+       |   Almacen                         |
+       |    5. Listar productos            |
+       |    6. Agregar un producto         |
+       |    7. Modificar un producto       |
+       |    8. Eliminar un producto        |
+       |                                   |
+       |   9. Historial de cambios         |
+       |                                   |
+       |   10. Return                      |                    
+       *-----------------------------------*
+      `,
+    );
+    opcion = parseInt(prompt(` --> `));
+    console.clear();
+    switch (opcion) {
+      case 1:
+        console.log("hola 1");
+        pause();
+        break;
+      case 2:
+        console.log("hola 2");
+        pause();
+        break;
+      case 3:
+        console.log("hola 3");
+        pause();
+        break;
+      case 4:
+        console.log("hola 4");
+        pause();
+        break;
+      case 5:
+          console.log(
+            `
+            *----------------------------------------*
+            |-----ONLINE MARKETS - INVENTORY LIST----|
+            *----------------------------------------*`);
+        pProducts.forEach((e) => {
+          console.log(
+`              - Product Id: ${e.getId()}
+              - Product Name: ${e.getName()}
+              - Product Price: $/ ${e.getPrice()}
+              - Product Cant: ${e.getCant()} units
+            *----------------------------------------*`);
+        })
+        pause();
+        break;
+      case 6:
+        if (addproduct()) {
+          console.log("\nRegistro de producto exitoso");
+          pause();
+        }
+        break;
+      case 7:
+        auxid = parseInt(prompt(` Enter the product ID: `));
+        if(pProducts.some((e) => e.getId() === auxid)) {
+          if(modifyproduct(auxid)){
+            console.log("\n Modifico el producto correctamente");
+            pause();
+          }
+        } else {
+          console.log("\n (El ID no existe, vuelva a intentarlo)");
+          pause();
+        }
+        break;
+      case 8:
+        auxid = parseInt(prompt(` Enter the product ID: `));
+        if(pProducts.some((e) => e.getId() === auxid)) {
+          if(deleteproduct(auxid)){
+            console.log("\n Elimino el producto correctamente");
+            pause();
+          }
+        } else {
+          console.log("\n (El ID no existe, vuelva a intentarlo)");
+          pause();
+        }
+        break;
+      case 9:
+        console.log("hola 9");
+        pause();
+        break;
+      case 10:
+        bucle = true;
+        break;
+      default:
+        break;
+    }
+    console.clear();
+  }
+}
+
+// prettier-ignore
 function manager_menu() {
+  let userAux = null;
   let bucle = false;
   let opcion;
   while (!bucle) {
     console.log(
       `
        *-------------------------------*
-       |--ONLINE MARKETS - MANAGERS S--|
+       |---ONLINE MARKETS - MANAGERS --|
        *-------------------------------*
        |     1. Log In                 |
        |     2. Recover Account        |
@@ -309,11 +700,33 @@ function manager_menu() {
     console.clear();
     switch (opcion) {
       case 1:
-        login(1);
+        if (login(1)) {
+          console.log("\nInicio de sesion exitoso");
+          pause();
+          manager_dashboard();
+        } else {
+          console.log("\nNo se pudo iniciar sesion");
+          pause();
+        }
         break;
       case 2:
-        console.log("hola 2");
-        pause();
+        userAux = recoveraccunt();
+        if(userAux === false){
+          console.log("\nNo se pudo encontrar la cuenta");
+          pause();
+        } else {
+          console.log("\n Cuenta Recuperada: ")
+          console.log(
+            `
+             Name: ${userAux.name}
+             Lastname: ${userAux.lastname}
+             Username: ${userAux.username}
+             Email: ${userAux.email}
+             Password: ${userAux.password}
+
+            `)
+          pause();
+        }
         break;
       case 3:
         bucle = true;
@@ -325,6 +738,7 @@ function manager_menu() {
   }
 }
 
+// prettier-ignore
 function access_menu() {
   let bucle = false;
   let opcion;
