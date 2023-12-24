@@ -18,6 +18,23 @@ class history {
     this.#product = _product;
   }
 
+  // Getters
+  getName() {
+    return this.#name;
+  }
+  getLastname() {
+    return this.#lastname;
+  }
+  getCurrentdate() {
+    return this.#currentdate;
+  }
+  getOperation() {
+    return this.#operation;
+  }
+  getProduct() {
+    return this.#product;
+  }
+
   getHistory() {
     return {
       name: this.#name,
@@ -32,7 +49,7 @@ class history {
     return new history(
       _data.name,
       _data.lastname,
-      _data.currentdate,
+      new Date(_data.currentdate),
       _data.operation,
       _data.product,
     );
@@ -205,6 +222,9 @@ try {
   console.log("Historial de cambios vacio");
 }
 
+//console.log(typeof pChangeHistory[0].getCurrentdate());
+//pause();
+
 // MENUS
 
 // prettier-ignore
@@ -226,13 +246,33 @@ const deleteproduct = (id) => {
     console.log("\n (Elemento identificado) ");
     confirm = prompt(` Confirmar eliminacion? 1(yes)/0(not) --> `);
     if (confirm == 1) {
+      // Save in changehistory
+      pChangeHistory.push(new history(
+        pManagers[user_idx].getName(),
+        pManagers[user_idx].getLastname(),
+        new Date(),
+        "DELETE product",
+        pProducts[id-1].getProduct() 
+      )); 
+
       pProducts.splice(id-1, 1);
       pProducts.forEach((e,i) => {
         if(e.getId() - i > 1){
           e.setId(i + 1);
         }
       })
+      
       const jsonData = JSON.stringify(pProducts.map((e) => e.getProduct()), null,2);
+      const jsonDataHistory = JSON.stringify(pChangeHistory.map((e) => e.getHistory()), null, 2);
+
+      fs.writeFileSync("./data/users/changehistory.json", jsonDataHistory, (error) => {
+        if (error) {
+          console.log(`error: ${error}`);
+        } else {
+          console.log("Sin errores");
+        }
+      });
+
       fs.writeFileSync("./data/products.json", jsonData, (error) => {
         if (error) {
           console.log(`error: ${error}`);
@@ -240,6 +280,7 @@ const deleteproduct = (id) => {
           console.log("Sin errores");
         }
       });
+
       bucle = true;
       return true;
     } else {
@@ -271,10 +312,29 @@ const modifyproduct = (id) => {
     console.log("\n (Elementos guardados) ");
     confirm = prompt(` Confirmar cambios? 1(yes)/0(not) --> `);
     if (confirm == 1) {
+      pChangeHistory.push(new history(
+        pManagers[user_idx].getName(),
+        pManagers[user_idx].getLastname(),
+        new Date(),
+        "MODIFY product",
+        pProducts[id-1].getProduct() 
+      )); 
+
       name === "-1"?0:pProducts[id-1].setName(name);
       price === "-1"?0:pProducts[id-1].setPrice(parseFloat(price));
       cant === "-1"?0:pProducts[id-1].setCant(parseInt(cant));
+
       const jsonData = JSON.stringify(pProducts.map((e) => e.getProduct()), null,2);
+      const jsonDataHistory = JSON.stringify(pChangeHistory.map((e) => e.getHistory()), null, 2);
+
+      fs.writeFileSync("./data/users/changehistory.json", jsonDataHistory, (error) => {
+        if (error) {
+          console.log(`error: ${error}`);
+        } else {
+          console.log("Sin errores");
+        }
+      });
+
       fs.writeFileSync("./data/products.json", jsonData, (error) => {
         if (error) {
           console.log(`error: ${error}`);
@@ -282,6 +342,7 @@ const modifyproduct = (id) => {
           console.log("Sin errores");
         }
       });
+
       bucle = true;
       return true;
     } else {
@@ -317,7 +378,8 @@ const addproduct = () => {
     console.log("\n (Elementos guardados) ");
     confirm = prompt(` Confirmar nuevo producto? 1(yes)/0(not) --> `);
     if (confirm == 1) {
-      pProducts.push(new product(pProducts.length, name, price, cant));
+      const longarr = pProducts.length + 1;
+      pProducts.push(new product(longarr, name, price, cant));
       const jsonData = JSON.stringify(pProducts.map((e) => e.getProduct()), null,2);
       fs.writeFileSync("./data/products.json", jsonData, (error) => {
         if (error) {
@@ -326,6 +388,23 @@ const addproduct = () => {
           console.log("Sin errores");
         }
       });
+
+      pChangeHistory.push(new history(
+        pManagers[user_idx].getName(),
+        pManagers[user_idx].getLastname(),
+        new Date(),
+        "ADD product",
+        pProducts[pProducts.length - 1].getProduct() 
+      )); 
+      const jsonDataHistory = JSON.stringify(pChangeHistory.map((e) => e.getHistory()), null, 2);
+      fs.writeFileSync("./data/users/changehistory.json", jsonDataHistory, (error) => {
+        if (error) {
+          console.log(`error: ${error}`);
+        } else {
+          console.log("Sin errores");
+        }
+      });
+
       bucle = true;
       return true;
     } else {
@@ -725,7 +804,27 @@ function manager_dashboard() {
         }
         break;
       case 9:
-        console.log("hola 9");
+        if(pChangeHistory.length === 0) {
+          console.log("\nNo se realizaron cambios");
+        } else {
+          console.log(
+            `
+            *----------------------------------------*
+            |-----ONLINE MARKETS - CHANGE HISTORY----|
+            *----------------------------------------*`);
+          pChangeHistory.forEach((e) => {
+            console.log(
+`              - Date: ${(e.getCurrentdate()).toDateString()}
+              - Time change: ${(e.getCurrentdate()).getHours()}H:${(e.getCurrentdate()).getMinutes()}M:${(e.getCurrentdate()).getSeconds()}S
+              - Author: ${e.getName()} ${e.getLastname()}
+              - Operation: ${e.getOperation()} 
+              - Product: ${(e.getProduct()).name}
+                -> Price: ${(e.getProduct()).price}
+                -> Cant: ${(e.getProduct()).cant}
+            *----------------------------------------*`);
+          })
+        }
+        console.log("\n");
         pause();
         break;
       case 10:

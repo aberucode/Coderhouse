@@ -118,5 +118,11 @@
     "name": "Fitness Tracker",
     "price": 100,
     "cant": 75
+  },
+  {
+    "id": 21,
+    "name": "Nintendo Wi",
+    "price": 300,
+    "cant": 50
   }
 ]

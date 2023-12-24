@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Abel",
+    "lastname": "Ortega",
+    "currentdate": "2023-12-24T22:07:49.277Z",
+    "operation": "ADD product",
+    "product": {
+      "id": 21,
+      "name": "Nintendo Wi",
+      "price": 300,
+      "cant": 50
+    }
+  }
+]
