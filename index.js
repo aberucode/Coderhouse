@@ -1,8 +1,43 @@
 const prompt = require("prompt-sync")();
 const fs = require("fs");
 const pause = () => prompt("(press ENTER to contine...)");
-let user_idx = 0;
 console.clear();
+let user_idx = 0;
+
+class history {
+  #name;
+  #lastname;
+  #currentdate;
+  #operation;
+  #product;
+  constructor(_name, _lastname, _currentdate, _operation, _product) {
+    this.#name = _name;
+    this.#lastname = _lastname;
+    this.#currentdate = _currentdate;
+    this.#operation = _operation;
+    this.#product = _product;
+  }
+
+  getHistory() {
+    return {
+      name: this.#name,
+      lastname: this.#lastname,
+      currentdate: this.#currentdate,
+      operation: this.#operation,
+      product: this.#product,
+    };
+  }
+
+  static getInstance(_data) {
+    return new history(
+      _data.name,
+      _data.lastname,
+      _data.currentdate,
+      _data.operation,
+      _data.product,
+    );
+  }
+}
 
 class user {
   #name;
@@ -132,24 +167,48 @@ class product {
 // Recover data - users
 const pClients = [];
 const pManagers = [];
-JSON.parse(fs.readFileSync("./data/users/clients.json", "utf-8")).forEach((e) =>
-  pClients.push(user.getInstance(e)),
-);
-// prettier-ignore
-JSON.parse(fs.readFileSync("./data/users/managers.json", "utf-8")).forEach((e) => 
-  pManagers.push(user.getInstance(e)),
-);
+try {
+  // prettier-ignore
+  JSON.parse(fs.readFileSync("./data/users/clients.json", "utf-8")).forEach((e) => 
+    pClients.push(user.getInstance(e)),
+  );
+} catch (error) {
+  console.log("Sin clientes registrados");
+}
+try {
+  // prettier-ignore
+  JSON.parse(fs.readFileSync("./data/users/managers.json", "utf-8")).forEach((e) => 
+    pManagers.push(user.getInstance(e)),
+  );
+} catch (error) {
+  console.log("Sin managers creados");
+}
 
 // Recover data - products
 const pProducts = [];
-JSON.parse(fs.readFileSync("./data/products.json", "utf-8")).forEach((e) =>
-  pProducts.push(product.getInstance(e)),
-);
+try {
+  JSON.parse(fs.readFileSync("./data/products.json", "utf-8")).forEach((e) =>
+    pProducts.push(product.getInstance(e)),
+  );
+} catch (error) {
+  console.log("Inventario de productos vacio");
+}
+
+//Recover data - change history
+const pChangeHistory = [];
+try {
+  // prettier-ignore
+  JSON.parse(fs.readFileSync("./data/users/changehistory.json", "utf-8")).forEach((e) =>
+    pChangeHistory.push(history.getInstance(e)),
+  );
+} catch (error) {
+  console.log("Historial de cambios vacio");
+}
 
 // MENUS
 
 // prettier-ignore
-deleteproduct = (id) => {
+const deleteproduct = (id) => {
   let bucle = false;
   let confirm;
   while (!bucle) {
@@ -190,7 +249,7 @@ deleteproduct = (id) => {
   }
 }
 // prettier-ignore
-modifyproduct = (id) => {
+const modifyproduct = (id) => {
   let bucle = false;
   let name;
   let price;
@@ -238,7 +297,7 @@ modifyproduct = (id) => {
 }
 
 // prettier-ignore
-addproduct = () => {
+const addproduct = () => {
   let bucle = false;
   let name;
   let price;
@@ -282,7 +341,7 @@ addproduct = () => {
 };
 
 // prettier-ignore
-signup = () => {
+const signup = () => {
   let bucle = false;
   let name;
   let lastname;
@@ -330,7 +389,7 @@ signup = () => {
 };
 
 // prettier-ignore
-recoveraccunt = () => {
+const recoveraccunt = () => {
   let auxUser;
   let bucle = false;
   let email;
@@ -369,7 +428,7 @@ recoveraccunt = () => {
 }
 
 // prettier-ignore
-login = (tUser) => {
+const login = (tUser) => {
   let bucle = false;
   let username;
   let password;
