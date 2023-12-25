@@ -222,10 +222,66 @@ try {
   console.log("Historial de cambios vacio");
 }
 
-//console.log(typeof pChangeHistory[0].getCurrentdate());
-//pause();
-
 // MENUS
+
+// prettier-ignore
+const modifyaccount = () => {
+  let bucle = false;
+  let name;
+  let lastname;
+  let username;
+  let email;
+  let password;
+
+  let confirm;
+  while (!bucle) {
+    console.log(
+      `
+       *------------------------------------*
+       |--ONLINE MARKETS -  MODIFY ACCOUNT--|
+       *------------------------------------*
+        Preserve data? Enter -1
+
+      `,
+    );
+    name = prompt(` --> New account name: `);
+    lastname = prompt(` --> New account lastname: `);
+    username = prompt(` --> New account username: `);
+    email = prompt(` --> New account email: `);
+    password = prompt(` --> New account password: `);
+
+    console.log("\n (Elementos guardados) ");
+    confirm = prompt(` Confirmar cambios? 1(yes)/0(not) --> `);
+    if (confirm == 1) {
+      name === "-1"?0:pClients[user_idx].setName(name);
+      lastname === "-1"?0:pClients[user_idx].setLastname(lastname);
+      username === "-1"?0:pClients[user_idx].setUsername(username);
+      email === "-1"?0:pClients[user_idx].setEmail(email);
+      password === "-1"?0:pClients[user_idx].setPassword(password);
+
+      const jsonData = JSON.stringify(pClients.map((e) => e.getUser()), null,2);
+
+      fs.writeFileSync("./data/users/clients.json", jsonData, (error) => {
+        if (error) {
+          console.log(`error: ${error}`);
+        } else {
+          console.log("Sin errores");
+        }
+      });
+
+      bucle = true;
+      return true;
+    } else {
+      confirm = prompt( ` Reiniciar? 1(yes)/0(not) --> `);
+      if(confirm == 1) {
+        console.clear();
+      }else{
+        bucle = true;
+        return false;
+      }
+    }
+  }
+}
 
 // prettier-ignore
 const deleteproduct = (id) => {
@@ -567,6 +623,7 @@ function client_dashboard() {
   console.clear();
   let bucle = false;
   let opcion;
+  let deleteconfirm;
   while (!bucle) {
     console.log(
       `
@@ -611,15 +668,57 @@ function client_dashboard() {
         pause();
         break;
       case 5:
-        console.log("hola 5");
+          console.log(
+            `
+            *----------------------------------------*
+            |------ONLINE MARKETS - ACCOUNT DATA-----|
+            *----------------------------------------*`);
+          console.log(
+`              - Full Name: ${pClients[user_idx].getName()} ${pClients[user_idx].getLastname()}
+              - Username: ${pClients[user_idx].getUsername()}
+              - Email: ${pClients[user_idx].getEmail()}
+              - Password: ${pClients[user_idx].getPassword()}
+            *----------------------------------------*
+            `);
         pause();
         break;
       case 6:
-        console.log("hola 6");
-        pause();
+        if(modifyaccount()) {
+          console.log("\n Modificacion de datos Exitosa");
+          pause();
+        }
         break;
       case 7:
-        console.log("hola 7");
+        console.log(
+          `
+           *----------------------------------------*
+           |-----ONLINE MARKETS - DELETE ACCOUNT----|
+           *----------------------------------------*`);
+        console.log(
+`             - Full Name: ${pClients[user_idx].getName()} ${pClients[user_idx].getLastname()}
+             - Username: ${pClients[user_idx].getUsername()}
+             - Email: ${pClients[user_idx].getEmail()}
+             - Password: ${pClients[user_idx].getPassword()}
+           *----------------------------------------*
+            `);
+        console.log(" Para eliminar la cuenta digite --> Eliminar cuenta");
+        deleteconfirm = prompt(` ---------------------------------> `); 
+        if(deleteconfirm === "Eliminar cuenta"){
+          pClients.splice(user_idx, 1);
+          const jsonData = JSON.stringify(pClients.map((e) => e.getUser()), null,2);
+          fs.writeFileSync("./data/users/clients.json", jsonData, (error) => {
+            if (error) {
+              console.log(`error: ${error}`);
+            } else {
+              console.log("Sin errores");
+            }
+          });
+
+          bucle = true; 
+          console.log("\n Esperamos verte pronto :)"); 
+        } else {
+          console.log("\n Error al digitar 'Eliminar cuenta'");
+        }
         pause();
         break;
       case 8:
