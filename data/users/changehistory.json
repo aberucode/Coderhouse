@@ -10,5 +10,41 @@
       "price": 300,
       "cant": 50
     }
+  },
+  {
+    "name": "Abel",
+    "lastname": "Ortega",
+    "currentdate": "2023-12-27T00:03:32.761Z",
+    "operation": "ADD product",
+    "product": {
+      "id": 22,
+      "name": "Wireless Keyboard",
+      "price": 75,
+      "cant": 100
+    }
+  },
+  {
+    "name": "Abel",
+    "lastname": "Ortega",
+    "currentdate": "2023-12-27T00:09:33.163Z",
+    "operation": "ADD product",
+    "product": {
+      "id": 23,
+      "name": "Xiaomi Pad",
+      "price": 400,
+      "cant": 140
+    }
+  },
+  {
+    "name": "Abel",
+    "lastname": "Ortega",
+    "currentdate": "2023-12-27T00:10:56.169Z",
+    "operation": "DELETE product",
+    "product": {
+      "id": 23,
+      "name": "Xiaomi Pad",
+      "price": 400,
+      "cant": 140
+    }
   }
 ]

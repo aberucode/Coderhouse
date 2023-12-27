@@ -619,6 +619,87 @@ const login = (tUser) => {
 };
 
 // prettier-ignore
+function client_productMenu() {
+  let bucle = false;
+  let opcion;
+
+  let aO, bO, cO;
+  let aN, bN, cN;
+  let aP, bP, cP;
+  let aC, bC, cC;
+  while(!bucle) {
+    console.log(
+      `
+       Client: ${pClients[user_idx].getName()} ${pClients[user_idx].getLastname()} 
+
+       *--------------------------------------------------------------------------------------------*
+       |---------------------------------ONLINE MARKETS - PRODUCTS----------------------------------|
+       *--------------------------------------------------------------------------------------------*`);
+    for (let i = 0; i < pProducts.length; i += 3) {
+      if( i === pProducts.length - 1){
+        console.log(
+`       | Option: ${String(i+1).padEnd(21," ")}|
+       | Product: ${(pProducts[i].getName().toString()).padEnd(20," ")}|
+       | Price: $/ ${(pProducts[i].getPrice().toString()).padEnd(19," ")}|
+       | Cant: ${pProducts[i].getCant() + " units".padEnd(23-(pProducts[i].getCant().toString().length)," ")}|
+       *------------------------------*`);
+        break;
+      }
+      if( i === pProducts.length - 2){
+        aO = (i+1).toString();
+        aN = pProducts[i].getName();
+        aP = pProducts[i].getPrice().toString();
+        aC = pProducts[i].getCant().toString();
+        bO = (i+2).toString();
+        bN = pProducts[i+1].getName();
+        bP = pProducts[i+1].getPrice().toString();
+        bC = pProducts[i+1].getCant().toString();
+        console.log(
+`       | Option: ${aO.padEnd(21," ")}| Option: ${bO.padEnd(21," ")}|  
+       | Product: ${aN.padEnd(20," ")}| Product: ${bN.padEnd(20," ")}|
+       | Price: $/ ${aP.padEnd(19," ")}| Price: $/ ${bP.padEnd(19," ")}|
+       | Cant: ${aC + " units".padEnd(23-aC.length," ")}| Cant: ${bC + " units".padEnd(23-bC.length," ")}|
+       *-------------------------------------------------------------*`);
+        break;
+      }
+      aO = (i+1).toString();
+      aN = pProducts[i].getName();
+      aP = pProducts[i].getPrice().toString();
+      aC = pProducts[i].getCant().toString();
+      bO = (i+2).toString();
+      bN = pProducts[i+1].getName();
+      bP = pProducts[i+1].getPrice().toString();
+      bC = pProducts[i+1].getCant().toString();
+      cO = (i+3).toString();
+      cN = pProducts[i+2].getName();
+      cP = pProducts[i+2].getPrice().toString();
+      cC = pProducts[i+2].getCant().toString();
+      console.log(
+`       | Option: ${aO.padEnd(21," ")}| Option: ${bO.padEnd(21," ")}| Option: ${cO.padEnd(21," ")}|  
+       | Product: ${aN.padEnd(20," ")}| Product: ${bN.padEnd(20," ")}| Product: ${cN.padEnd(20," ")}|       
+       | Price: $/ ${aP.padEnd(19," ")}| Price: $/ ${bP.padEnd(19," ")}| Price: $/ ${cP.padEnd(19," ")}|
+       | Cant: ${aC + " units".padEnd(23-aC.length," ")}| Cant: ${bC + " units".padEnd(23-bC.length," ")}| Cant: ${cC + " units".padEnd(23-cC.length, " ")}|
+       *--------------------------------------------------------------------------------------------*`);
+    }
+    console.log(`
+        (Enter "0" to exit)
+
+        Select an option to add to cart:
+      `);
+    opcion = parseInt(prompt(`         --> `));
+    console.clear();
+    if(opcion > 0 && opcion < 1000){
+      console.log("hola");
+    } else if(opcion <= 0){
+      bucle = true;
+    } else {
+      bucle = true;
+    }
+    console.clear();
+  }
+}
+
+// prettier-ignore
 function client_dashboard() {
   console.clear();
   let bucle = false;
@@ -652,8 +733,7 @@ function client_dashboard() {
     console.clear();
     switch (opcion) {
       case 1:
-        console.log("hola 1");
-        pause();
+        client_productMenu();
         break;
       case 2:
         console.log("hola 2");

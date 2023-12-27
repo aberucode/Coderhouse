@@ -79,7 +79,7 @@
   },
   {
     "id": 14,
-    "name": "Virtual Reality Headset",
+    "name": "Headset VR",
     "price": 400,
     "cant": 90
   },
@@ -121,8 +121,14 @@
   },
   {
     "id": 21,
-    "name": "Nintendo Wi",
+    "name": "Nintendo Wii",
     "price": 300,
     "cant": 50
+  },
+  {
+    "id": 22,
+    "name": "Wireless Keyboard",
+    "price": 75,
+    "cant": 100
   }
 ]
