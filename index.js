@@ -3,6 +3,7 @@ const fs = require("fs");
 const pause = () => prompt("(press ENTER to contine...)");
 console.clear();
 let user_idx = 0;
+let user_id = "";
 
 class history {
   #name;
@@ -184,6 +185,11 @@ class product {
 // Recover data - users
 const pClients = [];
 const pManagers = [];
+
+// Recover data - specific client
+let pClientHistory = [];
+let pClientFavs = [];
+let pClientCart = [];
 try {
   // prettier-ignore
   JSON.parse(fs.readFileSync("./data/users/clients.json", "utf-8")).forEach((e) => 
@@ -199,6 +205,33 @@ try {
   );
 } catch (error) {
   console.log("Sin managers creados");
+}
+
+function client_recover_data() {
+  try {
+    // prettier-ignore
+    JSON.parse(fs.readFileSync(`./data/users/sales/cart/${pClients[user_idx].getUsername()}.json`, "utf-8")).forEach((e) => 
+      pClientCart.push(product.getInstance(e)),
+    );
+  } catch (error) {
+    console.log("Sin productos en el carrito");
+  }
+  try {
+    // prettier-ignore
+    JSON.parse(fs.readFileSync(`./data/users/sales/favs/${pClients[user_idx].getUsername()}.json`, "utf-8")).forEach((e) => 
+      pClientFavs.push(product.getInstance(e)),
+    );
+  } catch (error) {
+    console.log("Sin productos favoritos");
+  }
+  try {
+    // prettier-ignore
+    JSON.parse(fs.readFileSync(`./data/users/sales/history/${pClients[user_idx].getUsername()}.json`, "utf-8")).forEach((e) => 
+      pClientHistory.push(history.getInstance(e)),
+    );
+  } catch (error) {
+    console.log("Aun no realizas una compra");
+  }
 }
 
 // Recover data - products
@@ -246,7 +279,6 @@ const modifyaccount = () => {
     );
     name = prompt(` --> New account name: `);
     lastname = prompt(` --> New account lastname: `);
-    username = prompt(` --> New account username: `);
     email = prompt(` --> New account email: `);
     password = prompt(` --> New account password: `);
 
@@ -255,7 +287,6 @@ const modifyaccount = () => {
     if (confirm == 1) {
       name === "-1"?0:pClients[user_idx].setName(name);
       lastname === "-1"?0:pClients[user_idx].setLastname(lastname);
-      username === "-1"?0:pClients[user_idx].setUsername(username);
       email === "-1"?0:pClients[user_idx].setEmail(email);
       password === "-1"?0:pClients[user_idx].setPassword(password);
 
@@ -582,6 +613,7 @@ const login = (tUser) => {
       if (pManagers.some((e, i) => {
           if (e.getUsername() === username && e.getPassword() === password) {
             user_idx = i;
+            user_id = e.getEmail();
             return true;
           }
           return false;
@@ -600,6 +632,7 @@ const login = (tUser) => {
       if (pClients.some((e, i) => {
           if (e.getUsername() === username && e.getPassword() === password) {
             user_idx = i;
+            user_id = e.getEmail();
             return true;
           }
           return false;
@@ -621,7 +654,7 @@ const login = (tUser) => {
 // prettier-ignore
 function client_productMenu() {
   let bucle = false;
-  let opcion;
+  let opc1,opc2;
 
   let aO, bO, cO;
   let aN, bN, cN;
@@ -684,13 +717,61 @@ function client_productMenu() {
     console.log(`
         (Enter "0" to exit)
 
-        Select an option to add to cart:
+        Select an option to  (exm: option? 1           )
+        add to cart or favs: (     1:(cart)/2:(favs)? 2)
       `);
-    opcion = parseInt(prompt(`         --> `));
-    console.clear();
-    if(opcion > 0 && opcion < 1000){
-      console.log("hola");
-    } else if(opcion <= 0){
+    opc1 = parseInt(prompt(`         Option --> `));
+    if(opc1 > 0 && opc1 <= pProducts.length){
+      opc2 = parseInt(prompt(`         1:(cart)/2:(favs) --> `));
+      if(opc2 === 1){
+        const longarr = pClientCart.length + 1;
+        pClientCart.push(new product(opc1, pProducts[opc1-1].getName(), pProducts[opc1-1].getPrice(), 1));
+        const jsonData = JSON.stringify(pClientCart.map((e) => e.getProduct()), null,2);
+        pClientHistory.push(new history(
+          pClients[user_idx].getName(),
+          pClients[user_idx].getLastname(),
+          new Date(),
+          "ADD product to cart",
+          pProducts[opc1-1].getProduct() 
+        )); 
+        const jsonDataHistory = JSON.stringify(pClientHistory.map((e) => e.getHistory()), null, 2);
+
+        fs.writeFileSync(`./data/users/sales/history/${pClients[user_idx].getUsername()}.json`, jsonDataHistory, (error) => {
+          if (error) {
+            console.log(`error: ${error}`);
+          } else {
+            console.log("Sin errores");
+          }
+        });
+        fs.writeFileSync(`./data/users/sales/cart/${pClients[user_idx].getUsername()}.json`, jsonData, (error) => {
+          if (error) {
+            console.log(`error: ${error}`);
+          } else {
+            console.log("Sin errores");
+          }
+        });
+        console.log("\nProducto agregado al carrito correctamente");
+        pause();
+      }
+      else if(opc2 === 2){
+        const longarr = pClientFavs.length + 1;
+        pClientFavs.push(new product(opc1, pProducts[opc1-1].getName(), pProducts[opc1-1].getPrice(), 1));
+        const jsonData = JSON.stringify(pClientFavs.map((e) => e.getProduct()), null,2);
+        fs.writeFileSync(`./data/users/sales/favs/${pClients[user_idx].getUsername()}.json`, jsonData, (error) => {
+          if (error) {
+            console.log(`error: ${error}`);
+          } else {
+            console.log("Sin errores");
+          }
+        });
+        console.log("\nProducto agregado a favoritos correctamente");
+        pause();
+      }
+      else {
+        console.log("\nOperacion no completada");
+        pause();
+      }
+    } else if(opc1 === 0){
       bucle = true;
     } else {
       bucle = true;
@@ -737,6 +818,27 @@ function client_dashboard() {
         break;
       case 2:
         console.log("hola 2");
+        if(pClientHistory.length === 0) {
+          console.log("\nNo registra compras en el historial");
+        } else {
+          console.log(
+            `
+            *-------------------------------------------*
+            |-----ONLINE MARKETS - PURCHASES HISTORY----|
+            *-------------------------------------------*`);
+            pClientHistory.forEach((e) => {
+            console.log(
+`              - Date: ${(e.getCurrentdate()).toDateString()}
+              - Time: ${(e.getCurrentdate()).getHours()}H:${(e.getCurrentdate()).getMinutes()}M:${(e.getCurrentdate()).getSeconds()}S
+              - Author: ${e.getName()} ${e.getLastname()}
+              - Operation: ${e.getOperation()} 
+              - Product: ${(e.getProduct()).name}
+                -> Price: $/ ${(e.getProduct()).price}
+                -> Cant: ${(e.getProduct()).cant} unit
+            *----------------------------------------*`);
+          })
+        }
+        console.log("\n");
         pause();
         break;
       case 3:
@@ -744,7 +846,24 @@ function client_dashboard() {
         pause();
         break;
       case 4:
-        console.log("hola 4");
+        if(pClientFavs.length === 0) {
+          console.log("\nNo cuenta con productos favoritos");
+        } else {
+          console.log(
+            `
+            *----------------------------------------*
+            |------ONLINE MARKETS - FAVS PRODUCTS-----|
+            *----------------------------------------*`);
+          pClientFavs.forEach((e) => {
+            console.log(
+`              - Product Id: ${e.getId()}
+              - Product Name: ${e.getName()}
+              - Product Price: ${e.getPrice()}
+              - Product Cant: ${e.getCant()} unit
+            *----------------------------------------*
+            `);
+          })
+        }
         pause();
         break;
       case 5:
@@ -836,6 +955,7 @@ function client_menu() {
         if (login(0)) {
           console.log("\nInicio de sesion exitoso");
           pause();
+          client_recover_data();         
           client_dashboard();
         } else {
           console.log("\nNo se pudo iniciar sesion");
@@ -998,8 +1118,8 @@ function manager_dashboard() {
               - Author: ${e.getName()} ${e.getLastname()}
               - Operation: ${e.getOperation()} 
               - Product: ${(e.getProduct()).name}
-                -> Price: ${(e.getProduct()).price}
-                -> Cant: ${(e.getProduct()).cant}
+                -> Price: $/ ${(e.getProduct()).price}
+                -> Cant: ${(e.getProduct()).cant} units
             *----------------------------------------*`);
           })
         }
