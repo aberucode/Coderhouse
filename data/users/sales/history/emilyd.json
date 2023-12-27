@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Emily",
+    "lastname": "Davis",
+    "currentdate": "2023-12-27T21:24:31.963Z",
+    "operation": "ADD product to cart",
+    "product": {
+      "id": 10,
+      "name": "Monitor",
+      "price": 300,
+      "cant": 1
+    }
+  },
+  {
+    "name": "Emily",
+    "lastname": "Davis",
+    "currentdate": "2023-12-27T21:24:38.526Z",
+    "operation": "ADD product to cart",
+    "product": {
+      "id": 18,
+      "name": "Smart Speaker",
+      "price": 120,
+      "cant": 1
+    }
+  },
+  {
+    "name": "Emily",
+    "lastname": "Davis",
+    "currentdate": "2023-12-27T22:31:22.303Z",
+    "operation": "CKECKOUT product",
+    "product": {
+      "id": 10,
+      "name": "Monitor",
+      "price": 300,
+      "cant": 1
+    }
+  }
+]

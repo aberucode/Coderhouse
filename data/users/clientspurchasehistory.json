@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Emily",
+    "lastname": "Davis",
+    "currentdate": "2023-12-27T22:31:22.306Z",
+    "operation": "CKECKOUT product",
+    "product": {
+      "id": 10,
+      "name": "Monitor",
+      "price": 300,
+      "cant": 1
+    }
+  }
+]

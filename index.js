@@ -3,7 +3,7 @@ const fs = require("fs");
 const pause = () => prompt("(press ENTER to contine...)");
 console.clear();
 let user_idx = 0;
-let user_id = "";
+let user_id = 0;
 
 class history {
   #name;
@@ -214,6 +214,7 @@ function client_recover_data() {
       pClientCart.push(product.getInstance(e)),
     );
   } catch (error) {
+    pClientCart = [];
     console.log("Sin productos en el carrito");
   }
   try {
@@ -222,6 +223,7 @@ function client_recover_data() {
       pClientFavs.push(product.getInstance(e)),
     );
   } catch (error) {
+    pClientFavs = [];
     console.log("Sin productos favoritos");
   }
   try {
@@ -230,6 +232,7 @@ function client_recover_data() {
       pClientHistory.push(history.getInstance(e)),
     );
   } catch (error) {
+    pClientHistory = [];
     console.log("Aun no realizas una compra");
   }
 }
@@ -244,7 +247,7 @@ try {
   console.log("Inventario de productos vacio");
 }
 
-//Recover data - change history
+// Recover data - change history
 const pChangeHistory = [];
 try {
   // prettier-ignore
@@ -253,6 +256,17 @@ try {
   );
 } catch (error) {
   console.log("Historial de cambios vacio");
+}
+
+// Recover data - client purchase history
+const pClientsPurchaseHistory = [];
+try {
+  // prettier-ignore
+  JSON.parse(fs.readFileSync("./data/users/clientspurchasehistory.json", "utf-8")).forEach((e) =>
+    pClientsPurchaseHistory.push(history.getInstance(e)),
+  );
+} catch (error) {
+  console.log("Historial de compras de clientes vacio");
 }
 
 // MENUS
@@ -613,7 +627,6 @@ const login = (tUser) => {
       if (pManagers.some((e, i) => {
           if (e.getUsername() === username && e.getPassword() === password) {
             user_idx = i;
-            user_id = e.getEmail();
             return true;
           }
           return false;
@@ -632,7 +645,6 @@ const login = (tUser) => {
       if (pClients.some((e, i) => {
           if (e.getUsername() === username && e.getPassword() === password) {
             user_idx = i;
-            user_id = e.getEmail();
             return true;
           }
           return false;
@@ -650,6 +662,170 @@ const login = (tUser) => {
     }
   }
 };
+
+// prettier-ignore
+function client_cartMenu() {
+  let bucle = false;
+  let opc1,opc2;
+
+  let aO, bO, cO;
+  let aN, bN, cN;
+  let aP, bP, cP;
+  let aC, bC, cC;
+  while(!bucle) {
+    console.log(
+      `
+       Client: ${pClients[user_idx].getName()} ${pClients[user_idx].getLastname()} 
+
+       *--------------------------------------------------------------------------------------------*
+       |-------------------------------ONLINE MARKETS - CART PRODUCTS-------------------------------|
+       *--------------------------------------------------------------------------------------------*`);
+    for (let i = 0; i < pClientCart.length; i += 3) {
+      if( i === pClientCart.length - 1){
+        console.log(
+`       | Option: ${String(pClientCart[i].getId()).padEnd(21," ")}|
+       | Product: ${(pClientCart[i].getName().toString()).padEnd(20," ")}|
+       | Price: $/ ${(pClientCart[i].getPrice().toString()).padEnd(19," ")}|
+       | Cant: ${pClientCart[i].getCant() + " units".padEnd(23-(pClientCart[i].getCant().toString().length)," ")}|
+       *------------------------------*`);
+        break;
+      }
+      if( i === pClientCart.length - 2){
+        aO = (pClientCart[i].getId()).toString();
+        aN = pClientCart[i].getName();
+        aP = pClientCart[i].getPrice().toString();
+        aC = pClientCart[i].getCant().toString();
+        bO = (pClientCart[i+1].getId()).toString();
+        bN = pClientCart[i+1].getName();
+        bP = pClientCart[i+1].getPrice().toString();
+        bC = pClientCart[i+1].getCant().toString();
+        console.log(
+`       | Option: ${aO.padEnd(21," ")}| Option: ${bO.padEnd(21," ")}|  
+       | Product: ${aN.padEnd(20," ")}| Product: ${bN.padEnd(20," ")}|
+       | Price: $/ ${aP.padEnd(19," ")}| Price: $/ ${bP.padEnd(19," ")}|
+       | Cant: ${aC + " units".padEnd(23-aC.length," ")}| Cant: ${bC + " units".padEnd(23-bC.length," ")}|
+       *-------------------------------------------------------------*`);
+        break;
+      }
+      aO = (pClientCart[i].getId()).toString();
+      aN = pClientCart[i].getName();
+      aP = pClientCart[i].getPrice().toString();
+      aC = pClientCart[i].getCant().toString();
+      bO = (pClientCart[i+1].getId()).toString();
+      bN = pClientCart[i+1].getName();
+      bP = pClientCart[i+1].getPrice().toString();
+      bC = pClientCart[i+1].getCant().toString();
+      cO = (pClientCart[i+2].getId()).toString();
+      cN = pClientCart[i+2].getName();
+      cP = pClientCart[i+2].getPrice().toString();
+      cC = pClientCart[i+2].getCant().toString();
+      console.log(
+`       | Option: ${aO.padEnd(21," ")}| Option: ${bO.padEnd(21," ")}| Option: ${cO.padEnd(21," ")}|  
+       | Product: ${aN.padEnd(20," ")}| Product: ${bN.padEnd(20," ")}| Product: ${cN.padEnd(20," ")}|       
+       | Price: $/ ${aP.padEnd(19," ")}| Price: $/ ${bP.padEnd(19," ")}| Price: $/ ${cP.padEnd(19," ")}|
+       | Cant: ${aC + " units".padEnd(23-aC.length," ")}| Cant: ${bC + " units".padEnd(23-bC.length," ")}| Cant: ${cC + " units".padEnd(23-cC.length, " ")}|
+       *--------------------------------------------------------------------------------------------*`);
+    }
+    console.log(`
+        (Enter "0" to exit)
+
+        Select an option to
+        checkout or remove from cart:
+      `);
+    opc1 = parseInt(prompt(`         Option --> `));
+    if(pClientCart.some((e,i) => {
+      if(e.getId() === opc1){
+        user_id = i;
+        return true;
+      }
+      return false;
+    })){
+      opc2 = parseInt(prompt(`         1:(checkout)/2:(remove) --> `));
+      if(opc2 === 1){
+        const longarr = pClientCart.length + 1;
+        pClientHistory.push(new history(
+          pClients[user_idx].getName(),
+          pClients[user_idx].getLastname(),
+          new Date(),
+          "CKECKOUT product",
+          pClientCart.find((e) => e.getId() === opc1).getProduct() 
+        )); 
+        pClientsPurchaseHistory.push(new history(
+          pClients[user_idx].getName(),
+          pClients[user_idx].getLastname(),
+          new Date(),
+          "CKECKOUT product",
+          pClientCart.find((e) => e.getId() === opc1).getProduct() 
+        ));
+        const jsonDataPurchaseClientHistory = JSON.stringify(pClientsPurchaseHistory.map((e) => e.getHistory()), null, 2);
+        const jsonDataHistory = JSON.stringify(pClientHistory.map((e) => e.getHistory()), null, 2);
+        fs.writeFileSync(`./data/users/sales/history/${pClients[user_idx].getUsername()}.json`, jsonDataHistory, (error) => {
+          if (error) {
+            console.log(`error: ${error}`);
+          } else {
+            console.log("Sin errores");
+          }
+        });
+        fs.writeFileSync(`./data/users/clientspurchasehistory.json`, jsonDataPurchaseClientHistory, (error) => {
+          if (error) {
+            console.log(`error: ${error}`);
+          } else {
+            console.log("Sin errores");
+          }
+        });
+        pClientCart.splice(user_id, 1);
+        const jsonData = JSON.stringify(pClientCart.map((e) => e.getProduct()), null,2);
+        fs.writeFileSync(`./data/users/sales/cart/${pClients[user_idx].getUsername()}.json`, jsonData, (error) => {
+          if (error) {
+            console.log(`error: ${error}`);
+          } else {
+            console.log("Sin errores");
+          }
+        });
+        pProducts.forEach((e) => {
+          if(e.getId() === opc1) {
+            let cproductdecree = e.getCant();
+            if(cproductdecree > 0) {
+              e.setCant(cproductdecree-1);
+            }
+          }
+        })
+        const jsonDataProduct = JSON.stringify(pProducts.map((e) => e.getProduct()), null, 2);
+        fs.writeFileSync(`./data/products.json`, jsonDataProduct, (error) => {
+          if (error) {
+            console.log(`error: ${error}`);
+          } else {
+            console.log("Sin errores");
+          }
+        });
+        console.log("\nProducto comprado correctamente");
+        pause();
+      }
+      else if(opc2 === 2){
+        pClientCart.splice(user_id, 1);
+        const jsonData = JSON.stringify(pClientCart.map((e) => e.getProduct()), null,2);
+        fs.writeFileSync(`./data/users/sales/cart/${pClients[user_idx].getUsername()}.json`, jsonData, (error) => {
+          if (error) {
+            console.log(`error: ${error}`);
+          } else {
+            console.log("Sin errores");
+          }
+        });
+        console.log("\nProducto removido correctamente");
+        pause();
+      }
+      else {
+        console.log("\nOperacion no completada");
+        pause();
+      }
+    } else if(opc1 === 0){
+      bucle = true;
+    } else {
+      bucle = true;
+    }
+    console.clear();
+  }
+}
 
 // prettier-ignore
 function client_productMenu() {
@@ -732,7 +908,7 @@ function client_productMenu() {
           pClients[user_idx].getLastname(),
           new Date(),
           "ADD product to cart",
-          pProducts[opc1-1].getProduct() 
+          pClientCart.find((e) => e.getId() === opc1).getProduct() 
         )); 
         const jsonDataHistory = JSON.stringify(pClientHistory.map((e) => e.getHistory()), null, 2);
 
@@ -817,7 +993,6 @@ function client_dashboard() {
         client_productMenu();
         break;
       case 2:
-        console.log("hola 2");
         if(pClientHistory.length === 0) {
           console.log("\nNo registra compras en el historial");
         } else {
@@ -842,8 +1017,13 @@ function client_dashboard() {
         pause();
         break;
       case 3:
-        console.log("hola 3");
-        pause();
+        if(pClientCart.length === 0) {
+          console.log("\nNo cuenta con productos en el carrito");
+          console.log("\n");
+          pause();
+        } else {
+          client_cartMenu();
+        }
         break;
       case 4:
         if(pClientFavs.length === 0) {
@@ -851,19 +1031,20 @@ function client_dashboard() {
         } else {
           console.log(
             `
-            *----------------------------------------*
+            *-----------------------------------------*
             |------ONLINE MARKETS - FAVS PRODUCTS-----|
-            *----------------------------------------*`);
+            *-----------------------------------------*`);
           pClientFavs.forEach((e) => {
             console.log(
 `              - Product Id: ${e.getId()}
               - Product Name: ${e.getName()}
               - Product Price: ${e.getPrice()}
               - Product Cant: ${e.getCant()} unit
-            *----------------------------------------*
+            *-----------------------------------------*
             `);
           })
         }
+        console.log("\n");
         pause();
         break;
       case 5:
@@ -1041,7 +1222,27 @@ function manager_dashboard() {
     console.clear();
     switch (opcion) {
       case 1:
-        console.log("hola 1");
+        if(pClientsPurchaseHistory.length === 0) {
+          console.log("\nEl sitio web aun no genera ventas");
+        } else{
+          console.log(
+            `
+            *----------------------------------------*
+            |-----ONLINE MARKETS - SALES HISTORY-----|
+            *----------------------------------------*`);
+          pClientsPurchaseHistory.forEach((e) => {
+            console.log(
+`              - Date: ${(e.getCurrentdate()).toDateString()}
+              - Time change: ${(e.getCurrentdate()).getHours()}H:${(e.getCurrentdate()).getMinutes()}M:${(e.getCurrentdate()).getSeconds()}S
+              - Author: ${e.getName()} ${e.getLastname()}
+              - Operation: ${e.getOperation()} 
+              - Product: ${(e.getProduct()).name}
+                -> Price: $/ ${(e.getProduct()).price}
+                -> Cant: ${(e.getProduct()).cant} unit
+            *----------------------------------------*`);
+          })
+        }
+        console.log("\n");
         pause();
         break;
       case 2:
