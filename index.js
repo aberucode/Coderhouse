@@ -287,6 +287,11 @@ const modifyaccount = () => {
        *------------------------------------*
        |--ONLINE MARKETS -  MODIFY ACCOUNT--|
        *------------------------------------*
+        Name: ${pClients[user_idx].getName()}
+        Lastname: ${pClients[user_idx].getLastname()}
+        Email: ${pClients[user_idx].getEmail()}
+        Password: ${pClients[user_idx].getPassword()}
+
         Preserve data? Enter -1
 
       `,
@@ -296,8 +301,8 @@ const modifyaccount = () => {
     email = prompt(` --> New account email: `);
     password = prompt(` --> New account password: `);
 
-    console.log("\n (Elementos guardados) ");
-    confirm = prompt(` Confirmar cambios? 1(yes)/0(not) --> `);
+    console.log("\n (Saved items) ");
+    confirm = prompt(` Confirm changes? 1(yes)/0(not) --> `);
     if (confirm == 1) {
       name === "-1"?0:pClients[user_idx].setName(name);
       lastname === "-1"?0:pClients[user_idx].setLastname(lastname);
@@ -317,7 +322,7 @@ const modifyaccount = () => {
       bucle = true;
       return true;
     } else {
-      confirm = prompt( ` Reiniciar? 1(yes)/0(not) --> `);
+      confirm = prompt( ` Restart? 1(yes)/0(not) --> `);
       if(confirm == 1) {
         console.clear();
       }else{
@@ -344,8 +349,8 @@ const deleteproduct = (id) => {
         - Product cant: ${pProducts[id-1].getCant()} units
       `,
     );
-    console.log("\n (Elemento identificado) ");
-    confirm = prompt(` Confirmar eliminacion? 1(yes)/0(not) --> `);
+    console.log("\n (Identified item) ");
+    confirm = prompt(` Confirm deletion? 1(yes)/0(not) --> `);
     if (confirm == 1) {
       // Save in changehistory
       pChangeHistory.push(new history(
@@ -403,15 +408,20 @@ const modifyproduct = (id) => {
        *------------------------------------*
        |--ONLINE MARKETS -  MODIFY PRODUCT--|
        *------------------------------------*
-        Preserve data? Enter -1
+        - Product id: ${pProducts[id-1].getId()}
+        - Product name: ${pProducts[id-1].getName()}
+        - Product price: $/ ${pProducts[id-1].getPrice()}
+        - Product cant: ${pProducts[id-1].getCant()} units
 
+        Preserve data? Enter -1
       `,
     );
+
     name = prompt(` --> New product name: `);
     price = prompt(` --> New product price: `);
     cant = prompt(` --> New product cant: `);
-    console.log("\n (Elementos guardados) ");
-    confirm = prompt(` Confirmar cambios? 1(yes)/0(not) --> `);
+    console.log("\n (Saved items) ");
+    confirm = prompt(` Confirm changes? 1(yes)/0(not) --> `);
     if (confirm == 1) {
       pChangeHistory.push(new history(
         pManagers[user_idx].getName(),
@@ -447,7 +457,7 @@ const modifyproduct = (id) => {
       bucle = true;
       return true;
     } else {
-      confirm = prompt( ` Reiniciar? 1(yes)/0(not) --> `);
+      confirm = prompt( ` Restart? 1(yes)/0(not) --> `);
       if(confirm == 1) {
         console.clear();
       }else{
@@ -476,8 +486,8 @@ const addproduct = () => {
     name = prompt(` --> Product name: `);
     price = parseFloat(prompt(` --> Product price: `));
     cant = parseInt(prompt(` --> Product cant: `));
-    console.log("\n (Elementos guardados) ");
-    confirm = prompt(` Confirmar nuevo producto? 1(yes)/0(not) --> `);
+    console.log("\n (Saved items) ");
+    confirm = prompt(` Confirm new product? 1(yes)/0(not) --> `);
     if (confirm == 1) {
       const longarr = pProducts.length + 1;
       pProducts.push(new product(longarr, name, price, cant));
@@ -509,7 +519,7 @@ const addproduct = () => {
       bucle = true;
       return true;
     } else {
-      confirm = prompt( ` Reiniciar? 1(yes)/0(not) --> `);
+      confirm = prompt( ` Restart? 1(yes)/0(not) --> `);
       if(confirm == 1) {
         console.clear();
       }else{
@@ -542,8 +552,8 @@ const signup = () => {
     username = prompt(` --> Username: `);
     email = prompt(` --> Email: `);
     password = prompt(` --> Password: `);
-    console.log("\n (Elementos guardados) ");
-    confirm = prompt(` Confirmar nuevo usuario? 1(yes)/0(not) --> `);
+    console.log("\n (Saved items) ");
+    confirm = prompt(` Confirm new user? 1(yes)/0(not) --> `);
     if (confirm == 1) {
       pClients.push(new user(name, lastname, username, email, password, 0));
       const jsonData = JSON.stringify(pClients.map((e) => e.getUser()), null,2);
@@ -557,7 +567,7 @@ const signup = () => {
       bucle = true;
       return true;
     } else {
-      confirm = prompt( ` Reiniciar? 1(yes)/0(not) --> `);
+      confirm = prompt( ` Restart? 1(yes)/0(not) --> `);
       if(confirm == 1) {
         console.clear();
       }else{
@@ -585,9 +595,9 @@ const recoveraccunt = () => {
       `,
     );
     email = prompt(` --> Email: `);
-    console.log("\n Preguntas de seguridad")
-    name = prompt(` Cual es su nombre? `);
-    username = prompt(` Cual es su nombre de usuario? `);
+    console.log("\n Security questions")
+    name = prompt(` What is your name? `);
+    username = prompt(` What is your username? `);
     if (pManagers.some((e) => {
       if(e.getEmail() === email && e.getName() === name && e.getUsername() === username){
         auxUser = e.getUser(); 
@@ -598,8 +608,8 @@ const recoveraccunt = () => {
       bucle = true;
       return auxUser;
     } else {
-       console.log("\n (Error al digitar o cuenta no encontrada)");
-       opcion = prompt(` Desea continuar? 1(yes)/0(not) --> `);
+       console.log("\n (Typing error or account not found)");
+       opcion = prompt(` Continue? 1(yes)/0(not) --> `);
        if (opcion == 1) console.clear();
        else if (opcion == 0) return false;
        else return false;
@@ -635,8 +645,8 @@ const login = (tUser) => {
         bucle = true;
         return true;
       } else {
-        console.log("\n (Error al digitar el usuario o la contrasena)");
-        opcion = prompt(` Desea continuar? 1(yes)/0(not) --> `);
+        console.log("\n (Error typing username or password)");
+        opcion = prompt(` Continue? 1(yes)/0(not) --> `);
         if (opcion == 1) console.clear();
         else if (opcion == 0) return false;
         else return false;
@@ -653,8 +663,8 @@ const login = (tUser) => {
         bucle = true;
         return true;
       } else {
-        console.log("\n (Error al digitar el usuario o la contrasena)");
-        opcion = prompt(` Desea continuar? 1(yes)/0(not) --> `);
+        console.log("\n (Error typing username or password)");
+        opcion = prompt(` Continue? 1(yes)/0(not) --> `);
         if (opcion == 1) console.clear();
         else if (opcion == 0) return false;
         else return false;
@@ -798,7 +808,7 @@ function client_cartMenu() {
             console.log("Sin errores");
           }
         });
-        console.log("\nProducto comprado correctamente");
+        console.log("\nProduct purchased successfully");
         pause();
       }
       else if(opc2 === 2){
@@ -811,11 +821,11 @@ function client_cartMenu() {
             console.log("Sin errores");
           }
         });
-        console.log("\nProducto removido correctamente");
+        console.log("\nProduct removed correctly");
         pause();
       }
       else {
-        console.log("\nOperacion no completada");
+        console.log("\nOperation not completed");
         pause();
       }
     } else if(opc1 === 0){
@@ -926,7 +936,7 @@ function client_productMenu() {
             console.log("Sin errores");
           }
         });
-        console.log("\nProducto agregado al carrito correctamente");
+        console.log("\nProduct successfully added to cart");
         pause();
       }
       else if(opc2 === 2){
@@ -940,11 +950,11 @@ function client_productMenu() {
             console.log("Sin errores");
           }
         });
-        console.log("\nProducto agregado a favoritos correctamente");
+        console.log("\nProduct successfully added to favorites");
         pause();
       }
       else {
-        console.log("\nOperacion no completada");
+        console.log("\nOperation not completed");
         pause();
       }
     } else if(opc1 === 0){
@@ -970,17 +980,17 @@ function client_dashboard() {
        *-----------------------------------*
        |------ONLINE MARKETS - CLIENTS-----|
        *-----------------------------------*
-       |   1. Empezar a comprar            |
+       |   1. Start Shopping               |
        |                                   |
-       |   Compras                         |
-       |    2. Visualizar historial        |
-       |    3. Carrito de compras          |
-       |    4. Productos favoritos         |
+       |   Shopping                        |
+       |    2. Display history             |
+       |    3. Shopping cart               |
+       |    4. Favorite products           |
        |                                   |
-       |   Cuenta                          |
-       |    5. Visualizar datos            |
-       |    6. Modificar datos             |
-       |    7. Eliminar cuenta             |
+       |   Account                         |
+       |    5. Display data                |
+       |    6. Modify data                 |
+       |    7. Delete account              |
        |                                   |
        |   8. Return                       |                    
        *-----------------------------------*
@@ -994,7 +1004,7 @@ function client_dashboard() {
         break;
       case 2:
         if(pClientHistory.length === 0) {
-          console.log("\nNo registra compras en el historial");
+          console.log("\nDoesn't record purchases in the history");
         } else {
           console.log(
             `
@@ -1018,7 +1028,7 @@ function client_dashboard() {
         break;
       case 3:
         if(pClientCart.length === 0) {
-          console.log("\nNo cuenta con productos en el carrito");
+          console.log("\nNo products in the cart");
           console.log("\n");
           pause();
         } else {
@@ -1027,7 +1037,7 @@ function client_dashboard() {
         break;
       case 4:
         if(pClientFavs.length === 0) {
-          console.log("\nNo cuenta con productos favoritos");
+          console.log("\nNo favorite products");
         } else {
           console.log(
             `
@@ -1064,7 +1074,7 @@ function client_dashboard() {
         break;
       case 6:
         if(modifyaccount()) {
-          console.log("\n Modificacion de datos Exitosa");
+          console.log("\n Successful data modification");
           pause();
         }
         break;
@@ -1081,9 +1091,9 @@ function client_dashboard() {
              - Password: ${pClients[user_idx].getPassword()}
            *----------------------------------------*
             `);
-        console.log(" Para eliminar la cuenta digite --> Eliminar cuenta");
-        deleteconfirm = prompt(` ---------------------------------> `); 
-        if(deleteconfirm === "Eliminar cuenta"){
+        console.log(" To delete the account type --> DELETE ACCOUNT");
+        deleteconfirm = prompt(` -----------------------------> `); 
+        if(deleteconfirm === "DELETE ACCOUNT"){
           pClients.splice(user_idx, 1);
           const jsonData = JSON.stringify(pClients.map((e) => e.getUser()), null,2);
           fs.writeFileSync("./data/users/clients.json", jsonData, (error) => {
@@ -1095,9 +1105,9 @@ function client_dashboard() {
           });
 
           bucle = true; 
-          console.log("\n Esperamos verte pronto :)"); 
+          console.log("\n Hope to see you soon :)"); 
         } else {
-          console.log("\n Error al digitar 'Eliminar cuenta'");
+          console.log("\n Error when typing 'DELETE ACCOUNT'");
         }
         pause();
         break;
@@ -1105,6 +1115,8 @@ function client_dashboard() {
         bucle = true;
         break;
       default:
+        console.log("Wrong option\n");
+        pause();
         break;
     }
     console.clear();
@@ -1134,18 +1146,18 @@ function client_menu() {
     switch (opcion) {
       case 1:
         if (login(0)) {
-          console.log("\nInicio de sesion exitoso");
+          console.log("\nSuccessful login!");
           pause();
           client_recover_data();         
           client_dashboard();
         } else {
-          console.log("\nNo se pudo iniciar sesion");
+          console.log("\nFailed to login");
           pause();
         }
         break;
       case 2:
         if (signup()) {
-          console.log("\nRegistro de cuenta exitoso");
+          console.log("\nSuccessful account registration");
           pause();
         }
         break;
@@ -1180,6 +1192,8 @@ function client_menu() {
         bucle = true;
         break;
       default:
+        console.log("Wrong option\n");
+        pause();
         break;
     }
     console.clear();
@@ -1200,21 +1214,17 @@ function manager_dashboard() {
        *-----------------------------------*
        |-----ONLINE MARKETS - MANAGERS ----|
        *-----------------------------------*
-       |   Ventas                          |
-       |    1. Historial de ventas         |
-       |    2. Productos mas vendidos      |
-       |    3. Productos menos vendidos    |
-       |    4. Clientes destacados         |
+       |   1. Sales History                |
        |                                   |
        |   Almacen                         |
-       |    5. Listar productos            |
-       |    6. Agregar un producto         |
-       |    7. Modificar un producto       |
-       |    8. Eliminar un producto        |
+       |    2. List products               |
+       |    3. Add a product               |
+       |    4. Modify a product            |
+       |    5. Delete a product            |
        |                                   |
-       |   9. Historial de cambios         |
+       |   6. History of change            |
        |                                   |
-       |   10. Return                      |                    
+       |   7. Return                       |                    
        *-----------------------------------*
       `,
     );
@@ -1223,7 +1233,7 @@ function manager_dashboard() {
     switch (opcion) {
       case 1:
         if(pClientsPurchaseHistory.length === 0) {
-          console.log("\nEl sitio web aun no genera ventas");
+          console.log("\nThe website still doesn't generate sales");
         } else{
           console.log(
             `
@@ -1246,18 +1256,6 @@ function manager_dashboard() {
         pause();
         break;
       case 2:
-        console.log("hola 2");
-        pause();
-        break;
-      case 3:
-        console.log("hola 3");
-        pause();
-        break;
-      case 4:
-        console.log("hola 4");
-        pause();
-        break;
-      case 5:
           console.log(
             `
             *----------------------------------------*
@@ -1273,39 +1271,39 @@ function manager_dashboard() {
         })
         pause();
         break;
-      case 6:
+      case 3:
         if (addproduct()) {
-          console.log("\nRegistro de producto exitoso");
+          console.log("\nSuccessful product registration");
           pause();
         }
         break;
-      case 7:
+      case 4:
         auxid = parseInt(prompt(` Enter the product ID: `));
         if(pProducts.some((e) => e.getId() === auxid)) {
           if(modifyproduct(auxid)){
-            console.log("\n Modifico el producto correctamente");
+            console.log("\n Product successfully modified");
             pause();
           }
         } else {
-          console.log("\n (El ID no existe, vuelva a intentarlo)");
+          console.log("\n (ID doesn't exist, try again)");
           pause();
         }
         break;
-      case 8:
+      case 5:
         auxid = parseInt(prompt(` Enter the product ID: `));
         if(pProducts.some((e) => e.getId() === auxid)) {
           if(deleteproduct(auxid)){
-            console.log("\n Elimino el producto correctamente");
+            console.log("\n Product successfully deleted");
             pause();
           }
         } else {
-          console.log("\n (El ID no existe, vuelva a intentarlo)");
+          console.log("\n (ID doesn't exist, try again)");
           pause();
         }
         break;
-      case 9:
+      case 6:
         if(pChangeHistory.length === 0) {
-          console.log("\nNo se realizaron cambios");
+          console.log("\nNo changes were made");
         } else {
           console.log(
             `
@@ -1327,10 +1325,12 @@ function manager_dashboard() {
         console.log("\n");
         pause();
         break;
-      case 10:
+      case 7:
         bucle = true;
         break;
       default:
+        console.log("Wrong option\n");
+        pause();
         break;
     }
     console.clear();
@@ -1359,21 +1359,21 @@ function manager_menu() {
     switch (opcion) {
       case 1:
         if (login(1)) {
-          console.log("\nInicio de sesion exitoso");
+          console.log("\n Succesful login");
           pause();
           manager_dashboard();
         } else {
-          console.log("\nNo se pudo iniciar sesion");
+          console.log("\n Failed to login");
           pause();
         }
         break;
       case 2:
         userAux = recoveraccunt();
         if(userAux === false){
-          console.log("\nNo se pudo encontrar la cuenta");
+          console.log("\n Account could not be found");
           pause();
         } else {
-          console.log("\n Cuenta Recuperada: ")
+          console.log("\n Account recovered:")
           console.log(
             `
              Name: ${userAux.name}
@@ -1390,6 +1390,8 @@ function manager_menu() {
         bucle = true;
         break;
       default:
+        console.log("Wrong option\n");
+        pause();
         break;
     }
     console.clear();
@@ -1422,12 +1424,13 @@ function access_menu() {
         client_menu();
         break;
       case 3:
-        console.log("Usted a salido del programa\n");
+        console.log("You have left the program\n");
         pause();
         bucle = true;
         break;
       default:
-        console.log("Opcion incorrecta\n");
+        console.log("Wrong option\n");
+        pause();
         break;
     }
     console.clear();

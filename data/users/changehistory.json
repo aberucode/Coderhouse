@@ -46,5 +46,17 @@
       "price": 400,
       "cant": 140
     }
+  },
+  {
+    "name": "Abel",
+    "lastname": "Ortega",
+    "currentdate": "2024-01-02T16:55:46.392Z",
+    "operation": "MODIFY product",
+    "product": {
+      "id": 10,
+      "name": "Monitor",
+      "price": 300,
+      "cant": 84
+    }
   }
 ]
