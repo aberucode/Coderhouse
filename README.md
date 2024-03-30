@@ -1,1 +1,1 @@
-Purchasing and Sales Management Console System
+Purchasing and Sales Management Console System - Abel Ortega
